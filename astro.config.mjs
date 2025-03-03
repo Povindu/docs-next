@@ -14,6 +14,8 @@ import { rehypeHeadingIds } from '@astrojs/markdown-remark';
 import rehypeAutolinkHeadings from 'rehype-autolink-headings';
 import rehypeSanitize from 'rehype-sanitize';
 
+import react from "@astrojs/react";
+
 // https://astro.build/config
 export default defineConfig({
   markdown: {
@@ -31,7 +33,7 @@ export default defineConfig({
       "material-symbols-light": ["*"],
       "flat-color-icons": ["template", "gallery", "approval", "document", "advertising", "currency-exchange", "voice-presentation", "business-contact", "database"]
     }
-  }), mdx(), preact(), robots(), sitemap(), pagefind()],
+  }), mdx(), preact(), robots(), sitemap(), pagefind(), react()],
   build: {
     format: 'preserve'
   },
