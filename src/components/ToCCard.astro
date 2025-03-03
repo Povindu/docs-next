@@ -1,0 +1,27 @@
+---
+import type { TocItem } from "../types/TocTypes";
+
+const { item, collection } = Astro.props;
+
+
+const preSlug = "release-notes"
+
+
+---
+
+<li>
+  <a
+    href={item.topicHref
+      ? `${item.topicHref?.slice(0, -3)}`
+      : item.href?.slice(0, -3)}>{item.name}</a
+  >
+  {
+    item.items && (
+      <ul class="pl-6 list-disc">
+        {item.items.map((item: TocItem) => (
+          <Astro.self item={item} />
+        ))}
+      </ul>
+    )
+  }
+</li>
