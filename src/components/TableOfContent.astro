@@ -2,32 +2,32 @@
 import ToCCard from "./ToCCard.astro";
 import type { TocItem } from "../types/TocTypes";
 import { getTableOfContents } from "../utils/toc";
-const { data, collection } = Astro.props;
+const { data, collection, liveUrl } = Astro.props;
 ---
 
 <section>
-  <ul class=" px-4">
+  <ul class="px-4">
+    <!-- <p>LiveUrl: {liveUrl}</p> -->
     {
       data.items?.map((item: TocItem) => (
         <div class="list-disc">
-           <ToCCard collection={collection} item={item} />
+          <ToCCard collection={collection} item={item} />
           {item.href && item.href.split(".").pop() == "yml" && (
             <Astro.self
-              data={
-                getTableOfContents(
-                  `release-notes/${item.href.split(".").slice(0, -1).join(".")}`
-                )
-              }
+              collection={collection}
+              data={getTableOfContents(
+                `release-notes/${item.href.split(".").slice(0, -1).join(".")}`
+              )}
             />
           )}
 
-          {item.href &&
+          {/* {item.href &&
             item.href.split(".").pop() == "yml" &&
             console.log(
               getTableOfContents(
                 `release-notes/${item.href.split(".").slice(0, -1).join(".")}`
               )
-            )}
+            )} */}
         </div>
       ))
     }

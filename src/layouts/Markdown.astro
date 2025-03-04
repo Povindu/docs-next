@@ -32,9 +32,12 @@ import CollapseList from "../components/CollapseList.tsx";
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-0">
       <nav class="bg-lightTealGray lg:col-span-3 p-12">
         <!-- <p class="text-lg font-semibold mb-2">Table of Contents</p> -->
-        <TableOfContent collection={collection} data={tocData} />
+        <TableOfContent
+          liveUrl={liveUrl}
+          collection={collection}
+          data={tocData}
+        />
         <!-- <CollapseList client:only="react" items={tocData.items} /> -->
-        <!-- {console.log(tocData.items)} -->
       </nav>
 
       <main
