@@ -1,9 +1,9 @@
 import { defineConfig } from "astro/config";
 import tailwind from "@astrojs/tailwind";
 import icon from "astro-icon";
-import remarkDirective from "remark-directive";
-import { remarkDirectiveNote } from "./remark-directive-note.mjs";
-import codeImport from "remark-code-import";
+// import remarkDirective from "remark-directive";
+// import { remarkDirectiveNote } from "./remark-directive-note.mjs";
+// import codeImport from "remark-code-import";
 import mdx from "@astrojs/mdx";
 import preact from "@astrojs/preact";
 import robots from "astro-robots";
@@ -19,22 +19,41 @@ import react from "@astrojs/react";
 // https://astro.build/config
 export default defineConfig({
   redirects: {
-    '/release-notes': '/release-notes/index',
+    // '/release-notes': '/release-notes/index',
     // '/blog': 'https://example.com/blog'
   },
-  integrations: [tailwind({
-    applyBaseStyles: false
-  }), icon({
-    include: {
-      tabler: ["*"],
-      mdi: ["*"],
-      fluent: ["*"],
-      "material-symbols-light": ["*"],
-      "flat-color-icons": ["template", "gallery", "approval", "document", "advertising", "currency-exchange", "voice-presentation", "business-contact", "database"]
-    }
-  }), mdx(), preact(), robots(), sitemap(), pagefind(), react()],
+  integrations: [
+    tailwind({
+      applyBaseStyles: false,
+    }),
+    icon({
+      include: {
+        tabler: ["*"],
+        mdi: ["*"],
+        fluent: ["*"],
+        "material-symbols-light": ["*"],
+        "flat-color-icons": [
+          "template",
+          "gallery",
+          "approval",
+          "document",
+          "advertising",
+          "currency-exchange",
+          "voice-presentation",
+          "business-contact",
+          "database",
+        ],
+      },
+    }),
+    mdx(),
+    // preact(),
+    robots(),
+    sitemap(),
+    pagefind(),
+    react(),
+  ],
   build: {
-    format: 'preserve'
+    format: "preserve",
   },
-  site: "https://docs.superoffice.com"
+  site: "https://docs.superoffice.com",
 });

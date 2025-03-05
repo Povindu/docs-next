@@ -9,7 +9,8 @@ import imgFeedback from "@media/feedback-action-button.png";
 import { getLastUpdatedFromGitHub } from "@scripts/getLastUpdatedFromGitHub.js";
 const lastUpdated = await getLastUpdatedFromGitHub("src/pages/about.astro");
 
-const contributionPages = await Astro.glob("./contribute/*.md");
+// const contributionPages = await Astro.glob("./contribute/*.md");
+const contributionPages = await Astro.glob("../content/contribute/*.md");
 
 const metadata = {
   title: "About docs.superoffice.com",
@@ -27,9 +28,11 @@ export const stripFileExtension = (url: string): string => {
       {lastUpdated && <p class="text-sm">Last updated on {lastUpdated}</p>}
       <div class="mb-6 px-4">
         <p class="mt-2 mb-6">
-          Welcome to the SuperOffice Documentation hub, your one-stop resource for mastering all things related to
-          SuperOffice CRM. Whether you're a seasoned developer, a business professional, or a new user getting started,
-          our comprehensive guides and resources are designed to support you every step of the way.
+          Welcome to the SuperOffice Documentation hub, your one-stop resource
+          for mastering all things related to SuperOffice CRM. Whether you're a
+          seasoned developer, a business professional, or a new user getting
+          started, our comprehensive guides and resources are designed to
+          support you every step of the way.
         </p>
         <div class="flex justify-center mb-4">
           <Image
@@ -48,36 +51,38 @@ export const stripFileExtension = (url: string): string => {
           <li>
             <h3>Getting started guides</h3>
             <p>
-              New to SuperOffice? Our introductory guides will help you set up and get the most out of your CRM
-              experience.
+              New to SuperOffice? Our introductory guides will help you set up
+              and get the most out of your CRM experience.
             </p>
           </li>
           <li>
             <h3>User guides</h3>
             <p>
-              Detailed manuals that cover every aspect of SuperOffice CRM, ensuring you have the information you need at
-              your fingertips.
+              Detailed manuals that cover every aspect of SuperOffice CRM,
+              ensuring you have the information you need at your fingertips.
             </p>
           </li>
           <li>
             <h3>Mobile CRM documentation</h3>
             <p>
-              Learn how to efficiently use our Mobile CRM app, with step-by-step guides and best practices for managing
-              customer relationships on the go.
+              Learn how to efficiently use our Mobile CRM app, with step-by-step
+              guides and best practices for managing customer relationships on
+              the go.
             </p>
           </li>
           <li>
             <h3>Developer resources</h3>
             <p>
-              Access technical documentation, API references, and tools designed to help developers integrate and extend
-              SuperOffice capabilities.
+              Access technical documentation, API references, and tools designed
+              to help developers integrate and extend SuperOffice capabilities.
             </p>
           </li>
           <li>
             <h3>IT professional guides</h3>
             <p>
-              Comprehensive resources for IT professionals covering on-site installation, cloud document integration
-              configuration, database mirroring, and identity management.
+              Comprehensive resources for IT professionals covering on-site
+              installation, cloud document integration configuration, database
+              mirroring, and identity management.
             </p>
           </li>
         </ul>
@@ -86,58 +91,86 @@ export const stripFileExtension = (url: string): string => {
       <section class="mb-6 px-4">
         <h2 class="text-2xl font-semibold">Interactive documentation</h2>
         <p class="mb-6 text-lg">
-          Discover how easy it is to enhance your experience with our tools and contribute to our community:
+          Discover how easy it is to enhance your experience with our tools and
+          contribute to our community:
         </p>
 
         <div class="flex items-center mb-6">
-          <Image src={imgShare} alt="Share button screenshot" class="mr-4 rounded-lg shadow-md" />
+          <Image
+            src={imgShare}
+            alt="Share button screenshot"
+            class="mr-4 rounded-lg shadow-md"
+          />
           <p class="text-base">
             <strong>Share</strong> your favorite content effortlessly! Click the
-            <strong>Share</strong> button to spread valuable insights with others who might benefit.
+            <strong>Share</strong> button to spread valuable insights with others
+            who might benefit.
           </p>
         </div>
 
         <div class="flex items-center mb-6">
-          <Image src={imgFeedback} alt="Feedback button screenshot" class="mr-4 rounded-lg shadow-md" />
+          <Image
+            src={imgFeedback}
+            alt="Feedback button screenshot"
+            class="mr-4 rounded-lg shadow-md"
+          />
           <p class="text-base">
-            Provide valuable <strong>Feedback</strong> on articles to help us improve. Your suggestions are crucial in refining
-            our content and making it more useful.
+            Provide valuable <strong>Feedback</strong> on articles to help us improve.
+            Your suggestions are crucial in refining our content and making it more
+            useful.
           </p>
         </div>
 
         <div class="flex items-center mb-6">
-          <Image src={imgEdit} alt="Edit button screenshot" class="mr-4 rounded-lg shadow-md" />
+          <Image
+            src={imgEdit}
+            alt="Edit button screenshot"
+            class="mr-4 rounded-lg shadow-md"
+          />
           <p class="text-base">
-            Have a suggestion for enhancing an article? Click the <strong>Edit</strong> button to propose updates and contribute
-            directly to our content improvements.
+            Have a suggestion for enhancing an article? Click the <strong
+              >Edit</strong
+            > button to propose updates and contribute directly to our content improvements.
           </p>
         </div>
 
         <p class="mt-6 text-lg">
-          For those looking to dive deeper, you can <strong>clone our repository</strong> and become a part of our ongoing
-          efforts to improve <code>docs.superoffice.com</code>. Your expertise and contributions are always welcome!
+          For those looking to dive deeper, you can <strong
+            >clone our repository</strong
+          > and become a part of our ongoing efforts to improve <code
+            >docs.superoffice.com</code
+          >. Your expertise and contributions are always welcome!
         </p>
       </section>
 
       <section class="mb-6 px-4">
-        <h2 class="text-2xl font-semibold mb-4">Contributing to SuperOfficeDocs</h2>
+        <h2 class="text-2xl font-semibold mb-4">
+          Contributing to SuperOfficeDocs
+        </h2>
 
         <p class="mb-4">
-          SuperOfficeDocs is our dedicated GitHub organization for managing all end-user and technical documentation
-          related to <a href="https://www.superoffice.com" target="_blank" rel="noopener noreferrer">SuperOffice</a>.
+          SuperOfficeDocs is our dedicated GitHub organization for managing all
+          end-user and technical documentation related to <a
+            href="https://www.superoffice.com"
+            target="_blank"
+            rel="noopener noreferrer">SuperOffice</a
+          >.
         </p>
 
         <p class="mb-4">
-          Our documentation is organized into several repositories, each named to reflect its content clearly. You can
-          interact with and contribute to the documentation directly. Visit our GitHub page at
-          <a href="https://github.com/SuperOfficeDocs" target="_blank" rel="noopener noreferrer"
-            >SuperOfficeDocs on GitHub</a
+          Our documentation is organized into several repositories, each named
+          to reflect its content clearly. You can interact with and contribute
+          to the documentation directly. Visit our GitHub page at
+          <a
+            href="https://github.com/SuperOfficeDocs"
+            target="_blank"
+            rel="noopener noreferrer">SuperOfficeDocs on GitHub</a
           > to explore.
         </p>
 
         <p>
-          Interested in contributing? Learn the basic steps for contributing to the SuperOffice Docs project on GitHub
-          by following our guide on
+          Interested in contributing? Learn the basic steps for contributing to
+          the SuperOffice Docs project on GitHub by following our guide on
           <a
             href="https://docs.superoffice.com/contribute/"
             class="text-blue-100 hover:underline"
@@ -146,7 +179,10 @@ export const stripFileExtension = (url: string): string => {
           >.
         </p>
       </section>
-      <ul class="py-6 list-disc ml-4" aria-label="List of links to contribution pages">
+      <ul
+        class="py-6 list-disc ml-4"
+        aria-label="List of links to contribution pages"
+      >
         {
           contributionPages.map((article) => (
             <li>

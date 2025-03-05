@@ -8,9 +8,10 @@ const { data, collection, liveUrl } = Astro.props;
 <section>
   <ul class="px-4">
     <!-- <p>LiveUrl: {liveUrl}</p> -->
+
     {
       data.items?.map((item: TocItem) => (
-        <div class="list-disc">
+        <div class="list-none">
           <ToCCard collection={collection} item={item} />
           {item.href && item.href.split(".").pop() == "yml" && (
             <Astro.self
