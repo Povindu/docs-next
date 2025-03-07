@@ -5,17 +5,18 @@ import { z, defineCollection } from "astro:content";
 import { glob } from "astro/loaders";
 
 
-
 // 2. Define your collection(s)
-
 const releaseNotes = defineCollection({
-  // loader: glob({ pattern: "**/*.{md,mdx}", base: "./src/content/posts" }),
+  // loader: glob({
+  //   pattern: "**/*.{md,mdx}",
+  //   base: "./src/content/release-notes",
+  // }),
   type: "content",
   schema: z.object({
-    title: z.string().optional(),
-    date: z.string().optional(),
-    description: z.string().optional(),
-    author: z.string().optional(),
+    // title: z.string().optional(),
+    // date: z.string().optional(),
+    // description: z.string().optional(),
+    // author: z.string().optional(),
     // version: z.string().optional(),
     // version_mobile: z.string().optional(),
   }),
@@ -35,8 +36,6 @@ const releaseNotes = defineCollection({
 //     ),
 //   }),
 // });
-
-
 
 // 3. Export a single `collections` object to register your collection(s)
 //    This key should match your collection directory name in "src/content"
