@@ -1,7 +1,7 @@
 import fs from "fs";
 import path from "path";
 import YAML from "yaml";
-import type { TocData } from "../types/TocTypes";
+import type { TocData } from "../types/TableOfContentTypes";
 
 // Read and parse YAML Data
 export function getTableOfContents(release: string): TocData {

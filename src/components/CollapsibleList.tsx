@@ -1,5 +1,5 @@
 import { useState } from "react";
-import type { TocItem } from "~/types/TocTypes";
+import type { TocItem } from "~/types/TableOfContentTypes";
 import { getTableOfContents } from "~/utils/toc";
 
 type CollapsibleListProps = {
@@ -36,16 +36,6 @@ export default function CollapsibleList({ items }: CollapsibleListProps) {
               {item.name}
             </a>
           </button>
-
-          {/* {item.href && item.href.split(".").pop() == "yml" && (
-            // <CollapsibleList
-            //   items={
-            //     getTableOfContents(
-            //       `release-notes/${item.href.split(".").slice(0, -1).join(".")}`
-            //     ).items
-            //   }
-            // />
-          )} */}
 
           {openIndexes.includes(index) && item.items && (
             <ul className="ml-4 mb-2">
