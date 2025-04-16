@@ -5,20 +5,24 @@ import { getCategoryPageContents } from "~/utils/getYamlContent";
 
 
 export function getStaticPaths() {
-  return [
-    { params: { category: "company" } },
-    { params: { category: "contact" } },
-    { params: { category: "email" } },
-    { params: { category: "diary" } },
-    { params: { category: "api" } },
-    { params: { category: "database" } },
-    { params: { category: "learn" } },
-    { params: { category: "online" } },
-    { params: { category: "onsite" } },
-    { params: { category: "service" } },
+  const Categories = [
+    "company",
+    "contact",
+    "email",
+    "diary",
+    "api",
+    "database",
+    "learn",
+    "online",
+    "onsite",
+    "service",
   ];
+  return Categories.map((category) => {
+    return {
+      params: { category },
+    };
+  });
 }
-
 
 const { category } = Astro.params;
 const CategoryData = getCategoryPageContents(`en/${category}`);
