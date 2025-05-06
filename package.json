@@ -5,6 +5,8 @@
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
+    "docker-start": "astro dev --host",
+    "docker-preview": "astro preview --host",
     "build": "astro check && astro build",
     "preview": "astro preview",
     "astro": "astro",
