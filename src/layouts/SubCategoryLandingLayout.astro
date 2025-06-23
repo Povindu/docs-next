@@ -6,7 +6,7 @@ import TableOfContentList from "@components/TableOfContentList";
 import SubCategoryCard from "@components/SubCategoryCard.astro";
 import { Breadcrumbs } from "astro-breadcrumbs";
 import "astro-breadcrumbs/breadcrumbs.css";
-const { data, ToCData, lang } = Astro.props;
+const { data, ToCData, lang, subCategoryName } = Astro.props;
 const currentPath = Astro.url.pathname;
 
 const metadata = {
@@ -17,6 +17,7 @@ type Props = {
   data: SubCategoryContentItem;
   ToCData: TocData | null;
   lang: string;
+  subCategoryName: string;
 };
 ---
 
@@ -53,7 +54,7 @@ type Props = {
             <TableOfContentList
               client:only="react"
               inputItems={ToCData.items}
-              slug="en/"
+              slug={`en/${subCategoryName}`}
               isMainTable={true}
               isWebApiTOC={false}
             />

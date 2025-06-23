@@ -21,4 +21,4 @@ const SubCategoryData = getSubCategoryPageContents(`en/${subcategory}`);
 const ToCData = getTableOfContents(`docs/en/${subcategory}`);
 ---
 
-<SubCategoryLandingLayout lang="en" data={SubCategoryData} ToCData={ToCData} />
+<SubCategoryLandingLayout lang="en" data={SubCategoryData} ToCData={ToCData} subCategoryName={subcategory}  />
