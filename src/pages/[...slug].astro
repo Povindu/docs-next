@@ -1,0 +1,165 @@
+---
+import { readFile } from "fs/promises";
+import { glob } from "glob";
+import path from "path";
+import matter from "gray-matter";
+import type { TocData } from "~/types/TableOfContentTypes";
+import { getTocByPath } from "@utils/tocUtils";
+import MarkdownLayout from "@layouts/Markdown.astro";
+import { marked } from "marked";
+
+export async function getStaticPaths() {
+  const baseContentPath = "external-content";
+  const referencePath = path.join(
+    baseContentPath,
+    "superoffice-docs/docs/en/api/reference",
+  );
+
+  // Function to create lazy loader for markdown content
+  function loadMarkdownContent(filePath: string) {
+    return async () => {
+      const rawContent = await readFile(filePath, "utf8");
+      const { data, content } = matter(rawContent);
+
+      // Create a more complete entry object that matches content collection structure
+      const relativePath = filePath.replace(
+        "external-content/superoffice-docs/docs/",
+        "",
+      );
+      const slug = relativePath.replace(/\.(md|mdx)$/, "");
+
+      const html = marked(content);
+
+      return {
+        data,
+        body: content,
+        filePath: filePath,
+        html: html,
+        slug: slug,
+        id: slug,
+        collection: "reference-docs",
+      };
+    };
+  }
+
+  // Function to create lazy loader for TOC data
+  function loadTocData(apiPath: string) {
+    return async () => {
+      try {
+        console.log(`Loading TOC data for path: ${apiPath}`);
+        const tocData = await getTocByPath(apiPath);
+        return tocData;
+      } catch (error) {
+        console.warn(`Failed to load TOC data for path: ${apiPath}`, error);
+        // Return a default/empty TOC structure instead of failing
+        return {
+          items: [],
+          // Add other default properties your TOC expects
+        } as TocData;
+      }
+    };
+  }
+
+  try {
+    // Use glob with the pattern and cwd option
+    const pattern =
+      "superoffice-docs/docs/en/api/reference/**/*.{md,mdx}";
+    const filePaths = await glob(pattern, {
+      cwd: baseContentPath,
+      absolute: false,
+    });
+
+    // console.log("Found files:", filePaths.length);
+    // console.log("First few files:", filePaths.slice(0, 5));
+
+    if (filePaths.length === 0) {
+      console.error("No files found! Check if the path exists:", referencePath);
+      return [];
+    }
+
+    // Create a map to cache TOC loaders (not the actual data)
+    const tocLoaderCache = new Map<string, () => Promise<TocData>>();
+
+    const paths = filePaths.map((relativePath) => {
+      // Convert relative path to absolute path for file reading
+      const absoluteFilePath = path.resolve(baseContentPath, relativePath);
+
+      // Generate slug from the relative path, removing base and extension
+      // Remove "superoffice-docs/docs/en/api/reference/" and file extension to get clean slug
+      const cleanPath = relativePath
+        .replace("superoffice-docs/docs/", "")
+        .replace(/\.(md|mdx)$/, "");
+      const slug = cleanPath;
+
+      console.log("Generated slug for", relativePath, ":", slug);
+
+      // Extract API type from the reference subfolder (restful, soap, webhooks, etc.)
+      const pathAfterReference = relativePath.replace(
+        "superoffice-docs/docs/en/api/reference/",
+        "",
+      );
+
+      // Add safety check for split operation
+      if (!pathAfterReference || pathAfterReference === relativePath) {
+        console.warn(
+          "Failed to extract path after reference for:",
+          relativePath,
+        );
+        console.warn("pathAfterReference:", pathAfterReference);
+        return null; // Skip this file
+      }
+
+      const api = pathAfterReference.split("/")[0];
+
+      // Build the correct TOC path for the collection lookup
+      // The getTocByPath expects a path like "superoffice-docs/docs/en/api/reference/restful"
+      const tocCollectionPath = `superoffice-docs/docs/en/api/reference/${api}`;
+
+      // Cache the TOC loader function, not the data
+      if (!tocLoaderCache.has(api)) {
+        console.log(
+          `Caching TOC loader for API: ${api}, collection path: ${tocCollectionPath}`,
+        );
+        tocLoaderCache.set(api, loadTocData(tocCollectionPath));
+      }
+
+      return {
+        params: { slug: slug }, 
+        props: {
+          loadEntry: loadMarkdownContent(absoluteFilePath),
+          loadTocData: tocLoaderCache.get(api)!,
+        },
+      };
+    });
+
+    console.log("Generated paths:", paths.length);
+    console.log(
+      "Sample generated slugs:",
+      paths.slice(0, 3).map((p) => p?.params.slug),
+    );
+    return paths;
+  } catch (error) {
+    console.error("Error in getStaticPaths:", error);
+    return [];
+  }
+}
+
+// Get the lazy loaders from props
+const { loadEntry, loadTocData } = Astro.props;
+
+// Load the actual data when the page is being built
+const entry = await loadEntry();
+const tocData = await loadTocData();
+
+// Debug logging to identify undefined values
+// console.log("=== DEBUG INFO ===");
+// console.log("Astro.params:", Astro.params);
+// console.log("Entry keys:", Object.keys(entry || {}));
+// // console.log("Entry.body:", entry?.body);
+// console.log("Entry.slug:", entry?.slug);
+// console.log("Entry.filePath:", entry?.filePath);
+// console.log("TocData:", tocData ? "loaded" : "undefined");
+// console.log("==================");
+---
+
+<MarkdownLayout entry={entry} toc={tocData} />
