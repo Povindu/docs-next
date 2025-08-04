@@ -28,7 +28,9 @@ const TOCPath =
     ? "release-notes"
     : `${language}/${isLearn ? "learn" : slug.split("/")[0]}`;
 
-const { Content, headings } = await render(entry);
+const { headings } = await render(entry);
+
+
 ---
 
 <Base metadata={frontmatter} lang={language}>
@@ -63,7 +65,7 @@ const { Content, headings } = await render(entry);
         data-pagefind-filter="language[data-language], audience[data-audience]"
         data-audience={frontmatter.audience}
       >
-        {Content && <Content />}
+         <div class="prose prose-sm max-w-none" set:html={entry.html} />
       </main>
     </div>
     <div
