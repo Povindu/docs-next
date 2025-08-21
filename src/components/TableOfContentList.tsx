@@ -9,25 +9,58 @@ type TableOfContentListProps = {
   inputItems: TocItem[];
   slug: string;
   isMainTable: boolean;
+  onStateChange?: (selfIndex: number) => void;
+  parentIndex?: number;
 };
 
 export default function TableOfContentList({
   inputItems,
   slug,
   isMainTable,
+  onStateChange,
+  parentIndex = 0,
 }: TableOfContentListProps) {
+
   const [openIndexes, setOpenIndexes] = useState<number[]>([]);
   const [showToC, setShowToC] = useState<boolean>(false);
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [currentPath, setCurrentPath] = useState<string>("");
+  const [isParentActive, setIsParentActive] = useState<number>(-1);
+  const [isSelfActive, setIsSelfActive] = useState<boolean>(false);
+
+  useEffect(() => {
+    const hasActiveItem = inputItems.some(item => {
+      const itemPath = generatePath(item);
+      return itemPath === currentPath;
+    });
+
+    if ((hasActiveItem || isSelfActive) && typeof onStateChange === "function") {
+      onStateChange(parentIndex);
+    }
+  }, [currentPath, inputItems, onStateChange, isSelfActive]);
+
+  useEffect(() => {
+    if (isParentActive != -1) {
+      setIsSelfActive(true)
+      toggleItem(isParentActive)
+    }
+  }, [isParentActive])
+
+  useEffect(() => {
+    setCurrentPath(window.location.pathname);
+  }, [window.location.pathname])
 
   document.addEventListener("astro:page-load", () => {
     setCurrentPath(window.location.pathname)
   });
 
-  useEffect(() => {
-    setCurrentPath(window.location.pathname);
-  }, [window.location.pathname])
+  const onStateChangeInParent = (selfIndex: number) => {
+    setIsParentActive(selfIndex)
+  }
+
+  const isActive = (item: TocItem, index: number): boolean => {
+    return generatePath(item) == currentPath || index == isParentActive
+  }
 
   const toggleItem = (index: number) => {
     setOpenIndexes((prev) =>
@@ -39,20 +72,23 @@ export default function TableOfContentList({
     // uid is only defined in toc files with YamlMime:TableOfContent
     if (item.uid != undefined) {
       const currentPathExceptLastTerm = currentPath.substring(0, currentPath.lastIndexOf("/"))
-      return `${ currentPathExceptLastTerm}/${item.uid}`;
+      return `${currentPathExceptLastTerm}/${item.uid}`;
     }
 
     // Use topicHref if available, otherwise fall back to href.
     const rawPath = item.topicHref || item.href;
     if (!rawPath) {
-      console.warn(`[generatePath] Missing href/topicHref for TOC item:`, item);
+      // console.warn(`[generatePath] Missing href/topicHref for TOC item:`, item);
       return "#";
     }
-    return `${base}/${slug}/${trimFileExtension(rawPath)}`;
+    const formattedURL = `${base}/${slug}/${trimFileExtension(rawPath)}`.replace("/index", "")
+    const resolvedPath = new URL(formattedURL, "http://docs.superoffice.com").pathname;
+    return resolvedPath;
   };
 
   const generateSlug = (item: TocItem) => {
-    return item.topicHref ? `${slug}/${item.topicHref.slice(0, -9)}` : slug;
+    //remove index.md, index.yaml, index.yaml from url path
+    return item.topicHref ? `${slug}/${item.topicHref.replace(/\/index/g, "").replace(/\.(md|yml|yaml)$/g, "")}` : slug;
   };
 
   const handleSearchTermChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -60,7 +96,7 @@ export default function TableOfContentList({
   };
 
   return (
-    <div className={`w-full overflow-auto ${isMainTable ? "md:mx-3 xl:mx-10 md:h-[78vh]" : "pl-4 md:pl-3"}`}>
+    <div className={`w-full overflow-auto  ${isMainTable ? "mx-3 xl:mx-10 lg:h-[78vh]" : "pl-4 md:pl-3"}`}>
 
       {/* Show/Hide ToC Button. Only visible on mobile view */}
       <div
@@ -111,7 +147,7 @@ export default function TableOfContentList({
 
                 <a
                   href={generatePath(item)}
-                  className={`w-full break-words text-wrap overflow-hidden ${generatePath(item) == currentPath
+                  className={`w-full break-words text-wrap overflow-hidden ${(isActive(item, index))
                     ? "text-superOfficeGreen font-semibold"
                     : ""
                     }`}
@@ -121,14 +157,16 @@ export default function TableOfContentList({
               </button>
             )}
 
-            {openIndexes.includes(index) && item.items && (
-              <div className="w-full">
+            {item.items && (
+              <div className={`w-full ${(openIndexes.includes(index)) ? " block" : "hidden"}`}>
 
-                {/* Recursively call TableOfContentList for exapnded sub items */}
+                {/* Recursively call TableOfContentList for expanded sub items */}
                 <TableOfContentList
                   slug={generateSlug(item)}
                   inputItems={item.items}
                   isMainTable={false}
+                  onStateChange={onStateChangeInParent}
+                  parentIndex={index}
                 />
 
               </div>

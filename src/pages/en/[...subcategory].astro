@@ -15,9 +15,10 @@ const basePath = `superoffice-docs/docs/${language}` as const;
 export async function getStaticPaths() {
   const basePath = `superoffice-docs/docs/en` as const;
 
-  const yamlEntries = await getCollection("cats", (entry) =>
-    entry.data.yamlMime === "SubCategory" &&
-    entry.id.startsWith(basePath)
+  const yamlEntries = await getCollection(
+    "cats",
+    (entry) =>
+      entry.data.yamlMime === "SubCategory" && entry.id.startsWith(basePath)
   );
 
   return yamlEntries.map((entry) => {
@@ -29,12 +30,16 @@ export async function getStaticPaths() {
 const { subcategory } = Astro.params;
 const fullPath = `${basePath}/${subcategory}`;
 
-const tocData = await getSegmentToc(language, subcategory);
+// gets first segment (ex:api from api/authentication) from subcategory variable
+const segment = subcategory.split("/")[0];
+
+const tocData = await getSegmentToc(language, segment);
 
 const entry = await getEntry("cats", fullPath);
 if (!entry) {
   throw new Error(`Subcategory not found: ${fullPath}`);
 }
+
 const categoryData = entry.data as SubCategoryDataType;
 ---
 
@@ -42,5 +47,6 @@ const categoryData = entry.data as SubCategoryDataType;
   lang={language}
   data={categoryData}
   ToCData={tocData}
-  baseSlug={`${language}/${subcategory}`}
+  baseSlug={`${language}/${segment}`}
+  hasMultipleLanguages = {segment == "learn"}
 />
